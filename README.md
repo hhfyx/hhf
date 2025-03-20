@@ -11,7 +11,7 @@
 ## 个人简介
 
 大家好，我是懒羊羊，是青青草原上最懒的羊。虽然我总是喜欢睡觉，但其实我也有自己的小聪明哦！我特别喜欢和朋友们一起玩耍，尤其是和喜羊羊、美羊羊他们。虽然我有时候会犯点小懒，但关键时刻我可不掉链子，总能想出一些好办法
-<img src="D:\git\image\OIP-C.jpg" width="800" alt="截图二">
+<img src="https://github.com/hhfyx/hhf/blob/master/image/OIP-C.jpg" width="800" alt="截图二">
 
 ## 爱好
 
@@ -35,4 +35,4 @@
 ## 我
 我的专业是人工智能
 我最喜欢的环境管理工具是conda
-<img src="D:\git\image\屏幕截图 2025-03-06 145501.png" width="800" alt="截图一">
+<img src="https://github.com/hhfyx/hhf/blob/master/image/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202025-03-06%20145501.png" width="800" alt="截图一">
