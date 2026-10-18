@@ -1,0 +1,94 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# ===== Notebook 检查点 =====
+.ipynb_checkpoints/
+
+# ===== 模型权重 / 训练产物（体积巨大，不入库）=====
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.keras
+*.h5
+*.onnx
+*.bin
+*.pkl
+*.joblib
+
+# ===== 数据集 / 生成产物 =====
+# 实践/test 下的模型输出与数据集（约 5.4GB）
+实践/test/defect_merged/
+实践/test/defect_patches_512_full/
+实践/test/defect_generator_checkpoints/
+实践/test/defect_generator_checkpoints_v2/
+实践/test/data/
+实践/test/data_foreground/
+实践/test/defectfill_output/
+实践/test/1/
+
+# ===== 图片 / 视频类大文件 =====
+# 报告配图单独放行（见下方 ! 规则）
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.webp
+*.mp4
+*.avi
+*.mov
+
+# 报告用图保留：文档里引用了它们，体积很小
+!实践/test/figures/**
+!实践/test/report_figures/**
+!前沿/*.png
+
+# ===== 数据集分片（LeRobot / parquet）=====
+*.parquet
+
+# ===== 压缩包 =====
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+*.gz
+
+# ===== 日志 =====
+*.log
+
+# ===== 嵌套仓库（各自有独立 .git，不应被外层收录）=====
+industrial-ai-platform/
+
+# ===== ACL 排查产物 =====
+acl-recovery/
+
+# ===== 临时目录 =====
+.tmp/
+.tmp_caj/
+
+# ===== IDE / OS =====
+.idea/
+.vscode/
+Thumbs.db
+desktop.ini
