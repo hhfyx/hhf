@@ -1,0 +1,166 @@
+{
+  "meta": {
+    "endpoint": "http://127.0.0.1:8326/v1/chat/completions",
+    "model": "deepseek-account/deepseek-flash",
+    "prompt": "用三句话介绍杭州，每句不超过 30 字。",
+    "runs_for_temperature": 5,
+    "max_tokens": 200,
+    "extra": {
+      "reasoning_effort": "none"
+    },
+    "timestamp": "2026-10-24T11:20:07+0800"
+  },
+  "E1_temperature": {
+    "0.0": {
+      "runs": 5,
+      "distinct_texts": 3,
+      "identical": false,
+      "mean_similarity_to_first": 0.9892,
+      "min_similarity_to_first": 0.9739,
+      "texts": [
+        "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居宜游。",
+        "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居宜游。",
+        "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居宜业。",
+        "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居宜游。",
+        "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居城。"
+      ],
+      "finish_reasons": [
+        "stop",
+        "stop",
+        "stop",
+        "stop",
+        "stop"
+      ],
+      "completion_tokens": [
+        34,
+        34,
+        34,
+        34,
+        33
+      ],
+      "mean_latency_ms": 964,
+      "errors": []
+    },
+    "0.7": {
+      "runs": 5,
+      "distinct_texts": 5,
+      "identical": false,
+      "mean_similarity_to_first": 0.6727,
+      "min_similarity_to_first": 0.3415,
+      "texts": [
+        "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居宜游。",
+        "杭州是西湖龙井的故乡，湖光山色四季皆美。  \n千年古都孕育人杰地灵，丝绸与茶香飘满城。  \n数字之城活力迸发，传统与现代在此交融。",
+        "1. 杭州是浙江省会，西湖美景闻名天下。  \n2. 千年古都底蕴深厚，数字经济蓬勃发展。  \n3. 龙井茶香飘四海，人间天堂宜居宜游。",
+        "杭州是西湖龙井的故乡，湖光山色四季皆美。  \n千年古都底蕴深厚，良渚与南宋遗迹众多。  \n数字经济蓬勃发展，宜居宜业充满活力。",
+        "1. 杭州是浙江省会，西湖美景闻名天下。\n2. 千年古都底蕴深厚，数字经济蓬勃发展。\n3. 龙井茶香飘四海，人间天堂宜居宜游。"
+      ],
+      "finish_reasons": [
+        "stop",
+        "stop",
+        "stop",
+        "stop",
+        "stop"
+      ],
+      "completion_tokens": [
+        34,
+        46,
+        43,
+        40,
+        41
+      ],
+      "mean_latency_ms": 911,
+      "errors": []
+    },
+    "1.5": {
+      "runs": 5,
+      "distinct_texts": 5,
+      "identical": false,
+      "mean_similarity_to_first": 0.4253,
+      "min_similarity_to_first": 0.3212,
+      "texts": [
+        "杭州是浙江省会，西湖龙井闻名天下。  \n京杭大运河穿城过，良渚文明五千年。  \n数字经济领先，2022年亚运会举办地。",
+        "1. 杭州是浙江省会，西湖龙井与丝绸闻名天下。  \n2. 作为千年古都，南宋文化底蕴深厚，古迹众多。  \n3. 如今电商与数字经济发达，是一座宜居的创新之城。",
+        "1. 杭州是浙江省会，西湖畔的千年古都，人文荟萃。\n2. 阿里巴巴等科技巨头坐落于此，数字经济全国领先。\n3. 龙井茶香飘四海，江南山水与宋韵文化交融生辉。",
+        "杭州是西湖龙井的故乡，湖山处处皆是诗画。  \n千年运河穿城过，数字经济领跑全国。  \n人间天堂宜居地，创新活力迎八方客。",
+        "杭州是浙江省会，西湖龙井享誉世界。  \n千年运河与良渚遗址见证历史底蕴。  \n数字经济蓬勃发展，宜居宜游的创新之城。"
+      ],
+      "finish_reasons": [
+        "stop",
+        "stop",
+        "stop",
+        "stop",
+        "stop"
+      ],
+      "completion_tokens": [
+        38,
+        48,
+        53,
+        39,
+        33
+      ],
+      "mean_latency_ms": 1120,
+      "errors": []
+    }
+  },
+  "E2_seed": {
+    "temp0_seed42_runs": 5,
+    "temp0_seed42_distinct": 3,
+    "temp0_seed42_identical": false,
+    "temp0_seed42_mean_similarity_to_first": 0.9827,
+    "temp0_seed42_texts": [
+      "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居宜业。",
+      "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居宜游。",
+      "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居宜业。",
+      "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居城。",
+      "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居城。"
+    ],
+    "temp0_seed42_vs_seed7_identical": false,
+    "temp0_seed42_vs_seed7_similarity": 0.9828,
+    "temp0_no_seed_distinct": 2,
+    "temp0_no_seed_texts": [
+      "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居城。",
+      "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，宜居宜业幸福城。"
+    ]
+  },
+  "E3_max_tokens": {
+    "20": {
+      "ok": true,
+      "finish_reason": "length",
+      "completion_tokens": 20,
+      "content_len": 38,
+      "content": "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。",
+      "error": null
+    },
+    "60": {
+      "ok": true,
+      "finish_reason": "stop",
+      "completion_tokens": 34,
+      "content_len": 58,
+      "content": "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居宜业。",
+      "error": null
+    },
+    "200": {
+      "ok": true,
+      "finish_reason": "stop",
+      "completion_tokens": 34,
+      "content_len": 58,
+      "content": "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居宜业。",
+      "error": null
+    }
+  },
+  "E4_stop": {
+    "plain": {
+      "finish_reason": "stop",
+      "completion_tokens": 33,
+      "content": "杭州是浙江省会，西湖美景闻名天下。  \n千年古都底蕴深厚，数字经济蓬勃发展。  \n龙井茶香飘四海，人间天堂宜居城。",
+      "period_count": 3
+    },
+    "stop_after_full_stop": {
+      "finish_reason": "stop",
+      "completion_tokens": 10,
+      "content": "杭州是浙江省会，西湖美景闻名天下",
+      "period_count": 0,
+      "content_len": 16
+    }
+  }
+}
