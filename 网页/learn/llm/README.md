@@ -12,6 +12,10 @@
 | [`lab_params.py`](lab_params.py) | 周一四组对照实验的脚本，产出下面的 json |
 | [`params_result.json`](params_result.json) | 周一的实测原始数据，笔记里的每个数字都出自这里 |
 
+> **周三（Streaming + SSE）的笔记在项目仓库**：
+> [`docs/sse.md`](../../industrial-ai-platform/docs/sse.md) —— 因为它同时是
+> `/api/v1/extract/stream` 端点的协议文档，放在服务仓库里离代码更近。
+
 周二的代码与可执行验收：
 
 | 文件（在 `industrial-ai-platform/`） | 作用 |
@@ -20,6 +24,16 @@
 | `app/core/llm/tool_loop.py` | 闭环 `run_tool_loop`：请求 → tool_calls → 执行 → 回灌 → 二次请求 |
 | `scripts/demo_tools.py` | 五格验收的可执行版本（A schema / B 注册表 / C 闭环 / D 并行 / E 边界） |
 | `tests/test_tools.py` | 离线测试：全链路不联网，含"任何输入都不许抛异常"的参数化用例 |
+
+周三的代码：
+
+| 文件（在 `industrial-ai-platform/`） | 作用 |
+| --- | --- |
+| `app/core/llm/streaming.py` | `stream_chat`：逐块 yield，`StreamStats` 记 TTFT/usage |
+| `app/api/v1/stream.py` | SSE 端点（新增路径，`/extract` 未动） |
+| `scripts/raw_sse.py` | 裸 SSE（asyncio + socket，不套 FastAPI）看 flush 时机 |
+| `scripts/bench_stream.py` | 流式 vs 非流式实测 |
+| `tests/test_streaming.py` | 18 个离线用例，锁帧字节形状与指标口径 |
 
 ## 复跑
 
