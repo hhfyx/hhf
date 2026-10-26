@@ -2,14 +2,17 @@
 
 纯学习代码，用来留痕：4 个可独立运行的小 demo + 4 个必答问题的结论。
 
+> 进阶篇（周三 10/21）在 [`advanced.py`](advanced.py)，限流 / 生产者-消费者 / 超时取消 / TaskGroup，见本文末尾。
+
 ## 运行环境（两个解释器均已实测通过）
 
 | 解释器 | 版本 | 说明 |
 | --- | --- | --- |
-| `python` | 3.9.23 | 首次编写与验证 |
-| `D:\conda_envs\defectfill2\python.exe` | 3.11.15 | 复跑验收（demo1） |
+| `python` | 3.9.23 | 基础四个 demo 的编写与验证 |
+| `py -3.11` | 3.11.2 | `advanced.py` 全部（需 3.11+）+ 基础 demo 复跑 |
 
-两个版本都能跑：代码没用到 3.10+ 的语法（`TaskGroup` 只在注释里提及，未使用）。
+两个版本都能跑：基础四个 demo 没用到 3.10+ 的语法（`TaskGroup` 只在注释里提及）。
+进阶篇 `advanced.py` 不同，它要求 3.11+，见下文。
 
 ## 怎么跑
 
@@ -20,7 +23,6 @@ python demo1_serial_vs_gather.py        # 串行 await vs asyncio.gather（约 7
 python demo2_blocking_trap.py           # asyncio.sleep vs time.sleep（约 6s）
 python demo3_error_handling.py          # as_completed vs gather 错误处理（约 2s）
 ```
-
 每个文件顶部的 docstring 就是当次的笔记，本文只做索引和结论汇总。
 
 ## 四个必答问题
@@ -96,8 +98,84 @@ demo1 输出：
 
 已实测通过（本机 Python 3.9.23），四个 demo 均无异常退出。
 
+## 进阶篇：`advanced.py`（2026-10-21 周三 20:00–22:00）
+
+> 完整的操作步骤、验收命令、坑清单见 **[RUNFLOW.md](RUNFLOW.md)**，本节只放结论。
+
+W2 的流式 LLM 调用、W12 的并发压测都靠这里的「限流 + 超时 + 取消」保命。四个 demo
+各自跑在自己的事件循环里，都可独立运行：
+
+```powershell
+cd learn/asyncio_basics
+py -3.11 advanced.py 1      # Semaphore 限流：20 个任务 + Semaphore(5)，打印当前并发数
+py -3.11 advanced.py 2      # Queue 生产者-消费者：1 生产者 10 条，3 worker 消费，queue.join()
+py -3.11 advanced.py 3      # 超时与取消：wait_for / shield / task.cancel + CancelledError
+py -3.11 advanced.py 4      # TaskGroup：重写 demo1，对比 gather 异常聚合
+py -3.11 advanced.py all    # 全跑（约 6s）
+```
+
+**这个文件必须用 3.11+ 跑**：demo4 用了 `asyncio.TaskGroup` 和 `except*`（PEP 654），
+后者是 3.11 的新语法，3.10 及以下**在解析阶段就 SyntaxError**（报错指到 `except*` 那一行）。
+本机默认 `python` 是 3.9.23，所以命令里显式写 `py -3.11`——这一点和上面基础四个 demo 不同，
+那些是 3.9/3.11 双跑通过的。
+
+### 四个必答问题（进阶）
+
+| 时间段 | demo | 必答问题 | 结论 |
+| --- | --- | --- | --- |
+| 20:00–20:35 | `demo1_semaphore` | 怎么确认并发被限住？ | 见下 5 |
+| 20:35–21:10 | `demo2_queue` | `queue.join()` 等的到底是啥？ | 见下 6 |
+| 21:10–21:40 | `demo3_timeout_cancel` | 超时 / 取消 / shield 各管什么？ | 见下 7 |
+| 21:40–22:00 | `demo4_taskgroup` | TaskGroup 与 gather 的异常差异？ | 见下 8 |
+
+### 5. Semaphore 限流
+
+`asyncio.Semaphore(5)` 只有 5 个"名额"，第 6 个任务会**停在 `async with sem` 这一行排队**，
+拿到名额才进临界区。实测：20 个任务峰值并发 = **5**；去掉信号量后峰值 = **20**。
+关键点：信号量限制的是"进入临界区的任务数"，不是"创建的任务数"——
+`create_task` 100 个也没关系，多出来的只是排队，不消耗连接。
+
+### 6. queue.join() 等的是什么
+
+`join()` 等的是 **`unfinished` 计数归零**，而不是"生产者塞完了"：每次 `put` +1，
+每次 `task_done()` -1。所以每个 `get()` 必须配一个 `task_done()`（放在 `finally` 里），
+漏一个就永远 join 不返回。
+
+**踩到的坑**：`create_task(producer(...))` 只是登记，当前协程还没让出 CPU 时队列是空的、
+`unfinished == 0`，于是 `await q.join()` **立刻返回**（第一次实测只处理了 5 条）。
+修法是 `create_task` 之后先 `await asyncio.sleep(0)` 让生产者跑起来，代码里已用 assert 兜住。
+
+### 7. 超时 / 取消 / shield 各管什么
+
+| 工具 | 管什么 | 实测现象 |
+| --- | --- | --- |
+| `asyncio.wait_for(coro, 1)` | 到点抛 `TimeoutError`，**并取消**内部任务 | 5s 的调用在 1.00s 返回，后台没有残留 |
+| `asyncio.shield(task)` | 取消只落在"等待者"身上，被保护的任务照跑 | 壳子被 cancel，内层仍跑完 3/3，`inner.cancelled()=False` |
+| `task.cancel()` | 向任务内抛 `CancelledError` | 正确写法 re-raise → `cancelled()=True`；吞掉 → 调用方以为"正常完成"，取消失效 |
+
+要点：`CancelledError` 在 3.8+ 继承 `BaseException`，`except Exception` **抓不到**它；
+清理逻辑写在 `except CancelledError` 里，做完必须 `raise`，否则 `wait_for` / `TaskGroup` 的取消会整体失灵。
+
+### 8. TaskGroup vs gather
+
+| 维度 | `gather`（默认） | `TaskGroup`（3.11+） |
+| --- | --- | --- |
+| 第一个异常 | 立刻原样抛给调用方 | 等组内清理完，抛 `ExceptionGroup` |
+| 其他任务 | **不取消**，后台跑到底（易泄漏） | **自动取消**同组剩余任务 |
+| 多个异常 | 只拿第一个，其余可能变日志噪音 | 全部聚合进 `.exceptions`（实测同时失败聚到 2 个） |
+| 结束时机 | 第一个异常就返回 | `async with` 退出时保证全组结束（结构化并发） |
+| 捕获写法 | `try/except RuntimeError` | `except* RuntimeError`（PEP 654） |
+
+`except*` 与普通 `except` 的区别：`ExceptionGroup` **不是** `RuntimeError`，所以
+`except RuntimeError` 根本抓不到它；`except*` 会按类型把组拆成若干子组，每个分支只拿自己那一类。
+
+注意聚合数量的语义：TaskGroup 只收"取消生效前已经失败"的那些；如果 Q 比 P 晚失败，
+它早被取消了，聚合里就只有 P。另外**被连带取消的兄弟任务不计入异常组**——取消是 TaskGroup
+自己的清理手段，不算错误，所以聚合里不会出现 `CancelledError`。TaskGroup 的价值是
+"不漏掉同时发生的失败"，不是"收齐所有潜在失败"。
+
 ## 资源
 
-- Python 官方文档：Coroutines and Tasks
+- Python 官方文档：Coroutines and Tasks / Synchronization Primitives / Queues
 - Real Python: *Async IO in Python: A Complete Walkthrough*
 - 《Python Concurrency with asyncio》(Manning) 第 1–3 章
